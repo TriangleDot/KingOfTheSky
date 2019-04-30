@@ -114,7 +114,7 @@ public class KOS : Gamemode //Gamemode inherits Godot.Node
 			if (OS.GetTicksMsec() > start_time) {
 				
 				start_running = false;
-				start_label.QueueFree();
+				//start_label.QueueFree();
 				running = true;
 				Console.Print("Starting Game!");
 				start_time = OS.GetTicksMsec();
