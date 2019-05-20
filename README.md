@@ -18,6 +18,7 @@ Starting
 3) Open the console by clicking '~' or '`'
 4) Type `Gamemode("KingOfTheSky")`. Press Enter.
 3) Type `Gm.StartGame()`. Press Enter
+
 Gameplay
 ---------
 You will be divided into 2 teams:
