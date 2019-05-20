@@ -22,6 +22,7 @@ private class CustomCommands
 	public bool StartGame()
 	{
 		
+		
 		Net.SteelRpc(Self, nameof(Self.StartGame)); 
 		Self.StartGame();
 		return true;
@@ -53,6 +54,8 @@ public class KOS : Gamemode //Gamemode inherits Godot.Node
 	}
 
 	public void loadWorld(string[] chunkz) {
+		World.Clear();
+		World.DefaultPlatforms();
 		foreach (string chunk in chunkz) {
 			World.LoadChunk(chunk);
 		}
@@ -80,8 +83,8 @@ public class KOS : Gamemode //Gamemode inherits Godot.Node
 	public void OnReady(bool am)
 	{
 		readied ++;
-		Console.Print($"{readied} out of {Game.PlayerList.Count} ready!");
-		if (readied == Game.PlayerList.Count) {
+		Console.Print($"{readied} out of {Net.Players.Count} ready!");
+		if (readied == Net.Players.Count) {
 			int startTime = OS.GetTicksMsec()+500;
 			Net.SteelRpc(this, nameof(this.SetStartTime), startTime);
 			SetStartTime(startTime);
@@ -114,18 +117,18 @@ public class KOS : Gamemode //Gamemode inherits Godot.Node
 			if (OS.GetTicksMsec() > start_time) {
 				
 				start_running = false;
-				start_label.QueueFree();
+				//start_label.QueueFree();
 				running = true;
 				Console.Print("Starting Game!");
 				start_time = OS.GetTicksMsec();
 				if (team == false) {
-					Game.PlayerList[Net.Work.GetNetworkUniqueId()].Translation = new Vector3(-489,132,1);
+					Net.Players[Net.Work.GetNetworkUniqueId()].Translation = new Vector3(-489,132,1);
 				}
 			}
 		}
 		if (running) {
 			if (team == true) {
-				var x = Game.PlayerList[Net.Work.GetNetworkUniqueId()];
+				var x = Net.Players[Net.Work.GetNetworkUniqueId()];
 				if (World.GetChunkPos(x.Translation) == new Vector3(-540,0,0) && x.Translation.y > 125 && x.Translation.y < 140) {
 					int end_time = OS.GetTicksMsec();
 					Net.SteelRpc(this, nameof(this.BlueWon), end_time);
@@ -180,7 +183,7 @@ public class KOS : Gamemode //Gamemode inherits Godot.Node
 				l = new Label();
 				l.Text = "You are on the RED team! Defend the hill!";
 				GetNode("/root").AddChild(l);
-				Game.PlayerList[Net.Work.GetNetworkUniqueId()].SetFly(false);
+				Net.Players[Net.Work.GetNetworkUniqueId()].SetFly(false);
 			}
 		}
 		foreach (int id in blueteam) {
@@ -189,7 +192,7 @@ public class KOS : Gamemode //Gamemode inherits Godot.Node
 				l = new Label();
 				l.Text = "You are on the BLUE team! Take the hill!";
 				GetNode("/root").AddChild(l);
-				Game.PlayerList[Net.Work.GetNetworkUniqueId()].SetFly(false);
+				Net.Players[Net.Work.GetNetworkUniqueId()].SetFly(false);
 				
 			}
 		}
